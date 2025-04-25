@@ -8,9 +8,9 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #parameters
 G <- 1000 #this is the number of generations 
 kD <- 0.0 #proportion males
-c <- 0.0  #cosegregation rate 
+c <- 0.75  #cosegregation rate 
 hA <- 0.0 #dominance of SA locus #if relevant 
-s <- 0.00 #fitness cost of cosegregator allele 
+s <- 0.01 #fitness cost of cosegregator allele 
 z <- 0.00 #fitness cost of the driver 
 r <- 0.000 #recombination 
 l<- 1 #fitness of ones with A2D2 
@@ -50,8 +50,7 @@ u12m <- 1-z
 u21m <- 1-z
 u22m <- 1-z
 
-##WHAT IMPACT WOULD THIS HAVE ON FITNESS OF THE COSEGREGATION LOCUS? 
-# v is the cosegregation locus (1 is female beneficial, 2 is male beneficial) 
+# v is the cosegregation locus 
 v11f <- 1
 v12f <- 1
 v21f <- 1
@@ -65,19 +64,19 @@ v22m <- 1-s
 w11m <- u11m*v11m
 w12m <- u11m*v12m
 w13m <- u12m*v11m
-w14m <- l#u12m*v12m
+w14m <- u12m*v12m #l
 w21m <- u11m*v21m
 w22m <- u11m*v22m
 w23m <- u12m*v21m
-w24m <- l #u12m*v22m
+w24m <- u12m*v22m #l
 w31m <- u21m*v11m
 w32m <- u21m*v12m
 w33m <- u22m*v11m
-w34m <- l#u22m*v12m
-w41m <- l #u21m*v21m
-w42m <- l#u21m*v22m
-w43m <- l#u22m*v21m
-w44m <- l#u22m*v22m
+w34m <- u22m*v12m #l
+w41m <- u21m*v21m #l
+w42m <- u21m*v22m #l
+w43m <- u22m*v21m #l
+w44m <- u22m*v22m #l
 
 w11f <- u11f*v11f
 w12f <- u11f*v12f
@@ -96,8 +95,6 @@ w42f <- u21f*v22f
 w43f <- u22f*v21f
 w44f <- u22f*v22f
 
-#try starting at equilibrium frequencies? 
-#have A1 and A2 start at same frequency 
 g1e <- 0.5
 g2e <- 0.5
 g3e <- 0.0
@@ -150,7 +147,6 @@ g4Ys_pr<- (1/wmbar)*(c*(0.5+kD)*(1-r)*g1e*g4Ys*w14m + c*(0.5+kD)*(r)* g2e*g3Ys*w
 }
 
 #RECURSION 
-
 g1e <- g1e_pr 
 g2e <- g2e_pr 
 g3e <- g3e_pr 
@@ -160,10 +156,12 @@ g1Xs <- g1Xs_pr
 g2Xs <- g2Xs_pr
 g3Xs <- g3Xs_pr
 g4Xs <- g4Xs_pr
-g1Ys <- g1Ys_pr-0.001
-g2Ys <- g2Ys_pr
-g3Ys <- g3Ys_pr
-g4Ys <- g4Ys_pr+0.001
+
+
+g3Ys <- g1Ys_pr*0.001
+g4Ys <- g2Ys_pr*0.001
+g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+g2Ys <- g2Ys_pr-g2Ys_pr*0.001
 
 
 G <- 1000 #this is the number of generations 
@@ -208,19 +206,19 @@ v22m <- 1-s
 w11m <- u11m*v11m
 w12m <- u11m*v12m
 w13m <- u12m*v11m
-w14m <- l#u12m*v12m
+w14m <- u12m*v12m #l
 w21m <- u11m*v21m
 w22m <- u11m*v22m
 w23m <- u12m*v21m
-w24m <- l #u12m*v22m
+w24m <- u12m*v22m #l
 w31m <- u21m*v11m
 w32m <- u21m*v12m
 w33m <- u22m*v11m
-w34m <- l#u22m*v12m
-w41m <- l #u21m*v21m
-w42m <- l#u21m*v22m
-w43m <- l#u22m*v21m
-w44m <- l#u22m*v22m
+w34m <- u22m*v12m #l
+w41m <- u21m*v21m #l
+w42m <- u21m*v22m #l
+w43m <- u22m*v21m #l
+w44m <- u22m*v22m #l
 
 w11f <- u11f*v11f
 w12f <- u11f*v12f
@@ -284,18 +282,10 @@ for (d in 1:G){
   DfreqVector[d]<-g3Xs+g4Xs+g3Ys+g4Ys
   AfreqVector[d]<-g2Xs+g4Xs+g2Ys+g4Ys
   
-  ####LINKAGE DISEQUILIBRIUM 
-  #pe<-g2e+g3e
-  #ps<-g2Xs+g2Ys+g3Xs+g3Ys
-  #qe<-g1e+g4e
-  #qs<-g1Xs+g1Ys+g4Xs+g4Ys
-  #Demax<-min((pe*(1-qe)),((1-pe)*qe))
-  #Dsmax<-min((ps*(1-qs)),((1-ps)*qs))
-  #DzVector[d]<-0.5*(g4e*(g1Xs+g1Ys)+g1e*(g4Xs+g4Ys) - g2e*(g3Xs+g3Ys)-g3e*(g2Xs+g2Ys))
-  
-  DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-  DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
-  DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
+ 
+  DA2D2Vector[d]<-((g1Xs+g1Ys)*(g4Ys+g4Xs))-((g2Xs+g2Ys)*(g3Xs+g3Ys))
+  DA2YVector[d]<- (g2Ys+g4Ys)*(g1Xs+g3Xs)-(g1Ys+g3Ys)*(g2Xs+g4Xs)
+  DD2YVector[d]<-((g3Ys+g4Ys)*(g1Xs+g2Xs))-((g3Xs+g4Xs)*(g1Ys+g2Ys))
   YFreq[d]<-g1Ys+g2Ys+g3Ys+g4Ys
   XFreq[d]<-g1Xs+g2Xs+g3Xs+g4Xs
   
@@ -312,9 +302,9 @@ for (d in 1:G){
   g3YsFreq[d]<-g3Ys
   g4YsFreq[d]<-g4Ys
   
-  DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-  DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
-  DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
+  DA2D2Vector[d]<-((g1Xs+g1Ys)*(g4Ys+g4Xs))-((g2Xs+g2Ys)*(g3Xs+g3Ys))
+  DA2YVector[d]<- (g2Ys+g4Ys)*(g1Xs+g3Xs)-(g1Ys+g3Ys)*(g2Xs+g4Xs)
+  DD2YVector[d]<-((g3Ys+g4Ys)*(g1Xs+g2Xs))-((g3Xs+g4Xs)*(g1Ys+g2Ys))
 }
 
 layout(matrix(c(1, 3, 2, 3, 4, 5), 3, 2, byrow = TRUE))
@@ -353,12 +343,6 @@ d <- tibble(G = x,
 write.table(x = d, file = "data_S4C.txt", row.names = F, col.names = T)
 
 
-#### ---- Part 2 ----
-
-#parameters
-# k is the proportion of male sperm that contain a Y
-# z is the probability that an D2 allele cosegregates with a Y in an D1D2 heterozygote 
-
 CoFunction<-function(G,kD,c,z,r,l){
   
   original_kD <- kD
@@ -383,7 +367,6 @@ CoFunction<-function(G,kD,c,z,r,l){
   u21m <- 1-z
   u22m <- 1-z
   
-  ##WHAT IMPACT WOULD THIS HAVE ON FITNESS OF THE COSEGREGATION LOCUS? 
   # v is the cosegregation locus (1 is female beneficial, 2 is male beneficial) 
   v11f <- 1
   v12f <- 1
@@ -428,9 +411,7 @@ CoFunction<-function(G,kD,c,z,r,l){
   w42f <- u21f*v22f
   w43f <- u22f*v21f
   w44f <- u22f*v22f
-  
-  #try starting at equilibrium frequencies? 
-  #have A1 and A2 start at same frequency 
+
   g1e <- 0.5
   g2e <- 0.5
   g3e <- 0.0
@@ -487,7 +468,6 @@ CoFunction<-function(G,kD,c,z,r,l){
   
   kD <- original_kD
   z <- original_z
-  
   g1e <- g1e_pr 
   g2e <- g2e_pr 
   g3e <- g3e_pr 
@@ -497,10 +477,12 @@ CoFunction<-function(G,kD,c,z,r,l){
   g2Xs <- g2Xs_pr
   g3Xs <- g3Xs_pr
   g4Xs <- g4Xs_pr
-  g1Ys <- g1Ys_pr-0.001
-  g2Ys <- g2Ys_pr
-  g3Ys <- g3Ys_pr
-  g4Ys <- g4Ys_pr+0.001
+  
+  
+  g3Ys <- g1Ys_pr*0.001
+  g4Ys <- g2Ys_pr*0.001
+  g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+  g2Ys <- g2Ys_pr-g2Ys_pr*0.001
   
   u11f <- 1
   u12f <- 1
@@ -511,8 +493,7 @@ CoFunction<-function(G,kD,c,z,r,l){
   u12m <- 1-z
   u21m <- 1-z
   u22m <- 1-z
-  
-  ##WHAT IMPACT WOULD THIS HAVE ON FITNESS OF THE COSEGREGATION LOCUS? 
+
   # v is the cosegregation locus (1 is female beneficial, 2 is male beneficial) 
   v11f <- 1
   v12f <- 1
@@ -597,9 +578,9 @@ CoFunction<-function(G,kD,c,z,r,l){
     g3Ys <- g3Ys_pr
     g4Ys <- g4Ys_pr
     
-    DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-    DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
-    DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
+    DA2D2Vector[d]<-((g1Xs+g1Ys)*(g4Ys+g4Xs))-((g2Xs+g2Ys)*(g3Xs+g3Ys))
+    DA2YVector[d]<- (g2Ys+g4Ys)*(g1Xs+g3Xs)-(g1Ys+g3Ys)*(g2Xs+g4Xs)
+    DD2YVector[d]<-((g3Ys+g4Ys)*(g1Xs+g2Xs))-((g3Xs+g4Xs)*(g1Ys+g2Ys))
     
     SexRatioVector[d]<-g1Ys+g2Ys+g3Ys+g4Ys
     DfreqVector[d]<-g3Xs+g4Xs+g3Ys+g4Ys

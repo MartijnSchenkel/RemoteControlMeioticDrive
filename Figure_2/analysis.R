@@ -7,11 +7,11 @@ install.packages("png")
 # Parameters
 G <- 1000 #this is the number of generations 
 kD <- 0.0 #proportion males (now changed to the skew; so it can range from 0 to 0.5)
-s <- 0.0 #selection in males 
-t <- 0.0 #selection in females 
+s <- 0.5 #selection in males 
+t <- 0.5 #selection in females 
 hA <- 0.5 #dominance of SA locus 
 z <- 0.000 #fitness cost of the driver 
-r <- 0.001 #recombination
+r <- 0.000 #recombination
 
 DfreqVector<-numeric(G)
 AfreqVector<-numeric(G)
@@ -78,7 +78,6 @@ w42f <- u21f*v22f
 w43f <- u22f*v21f
 w44f <- u22f*v22f
 
-
 XFreq <-numeric(G)
 YFreq <-numeric(G)
 g1eFreq<-numeric(G)
@@ -122,7 +121,7 @@ for (d in 1:500){
   g1Xs_pr<- (1/wmbar)*(0.5*1* g1e*g1Ys*w11m + 0.5*0.5* g1e*g2Ys*w12m + (0.5-kD)*0.5* g1e*g3Ys*w13m + (0.5-kD)*0.5*(1-r)* g1e*g4Ys*w14m + 0.5*0.5* g2e*g1Ys*w21m + (0.5-kD)*0.5*(r)* g2e*g3Ys*w23m + (0.5-kD)*0.5* g3e*g1Ys*w31m + (0.5-kD)*0.5*(r)* g3e*g2Ys*w32m + (0.5-kD)*0.5*(1-r)* g4e*g1Ys*w41m)
   g2Xs_pr<- (1/wmbar)*(0.5*0.5* g1e*g2Ys*w12m + (0.5-kD)*0.5*(r)* g1e*g4Ys*w14m + 0.5*0.5* g2e*g1Ys*w21m + 0.5*1* g2e*g2Ys*w22m + (0.5-kD)*0.5*(1-r)* g2e*g3Ys*w23m + (1-kD)*0.5* g2e*g4Ys*w24m + (0.5-kD)*0.5*(1-r)* g3e*g2Ys*w32m + (0.5-kD)*0.5*(r)* g4e*g1Ys*w41m + (0.5-kD)*0.5* g4e*g2Ys*w42m)
   g3Xs_pr<- (1/wmbar)*((0.5-kD)*0.5* g1e*g3Ys*w13m + (0.5-kD)*0.5*(r)* g1e*g4Ys*w14m + (0.5-kD)*0.5*(1-r)* g2e*g3Ys*w23m + (0.5-kD)*0.5* g3e*g1Ys*w31m + (0.5-kD)*0.5*(1-r)* g3e*g2Ys*w32m + (0.5-kD)*1* g3e*g3Ys*w33m + (0.5-kD)*0.5* g3e*g4Ys*w34m + (0.5-kD)*0.5*(r)* g4e*g1Ys*w41m + (0.5-kD)*0.5* g4e*g3Ys*w43m)
-  g4Xs_pr<- (1/wmbar)*((0.5-kD)*0.5*(1-r)* g1e*g4Ys*w14m + (0.5-kD)*0.5*(r)* g2e*g3Ys*w23m + (0.5-kD)*0.5* g2e*g4Ys*w24m + (0.5-kD)*0.5*(r)* g3e*g2Ys*w32m + (0.5-kD)*0.5* g3e*g4Ys*w34m + (0.5-kD)*0.5*(1-r)* g4e*g1Ys*w41m + (0.5-kD)*0.5* g4e*g2Ys*w42m + (0.5-kD)*0.5* g4e*g3Ys*w43m + (0.5-kD)*1* g4e*g4Ys*w44m) 
+  g4Xs_pr<- (1/wmbar)*((0.5-kD)*0.5*(1-r)*g1e*g4Ys*w14m + (0.5-kD)*0.5*(r)* g2e*g3Ys*w23m + (0.5-kD)*0.5* g2e*g4Ys*w24m + (0.5-kD)*0.5*(r)* g3e*g2Ys*w32m + (0.5-kD)*0.5* g3e*g4Ys*w34m + (0.5-kD)*0.5*(1-r)* g4e*g1Ys*w41m + (0.5-kD)*0.5* g4e*g2Ys*w42m + (0.5-kD)*0.5* g4e*g3Ys*w43m + (0.5-kD)*1* g4e*g4Ys*w44m) 
   
   g1Ys_pr<- (1/wmbar)*(0.5*1* g1e*g1Ys*w11m + 0.5*0.5* g1e*g2Ys*w12m + (0.5+kD)*0.5* g1e*g3Ys*w13m + (0.5+kD)*0.5*(1-r)* g1e*g4Ys*w14m + 0.5*0.5* g2e*g1Ys*w21m + (0.5+kD)*0.5*(r)* g2e*g3Ys*w23m + (0.5+kD)*0.5* g3e*g1Ys*w31m + (0.5+kD)*0.5*(r)* g3e*g2Ys*w32m + (0.5+kD)*0.5*(1-r)* g4e*g1Ys*w41m)
   g2Ys_pr<- (1/wmbar)*(0.5*0.5* g1e*g2Ys*w12m + (0.5+kD)*0.5*(r)* g1e*g4Ys*w14m + 0.5*0.5* g2e*g1Ys*w21m + 0.5*1* g2e*g2Ys*w22m + (0.5+kD)*0.5*(1-r)* g2e*g3Ys*w23m + (0.5+kD)*0.5* g2e*g4Ys*w24m + (0.5+kD)*0.5*(1-r)* g3e*g2Ys*w32m + (0.5+kD)*0.5*(r)* g4e*g1Ys*w41m + (0.5+kD)*0.5* g4e*g2Ys*w42m)
@@ -142,7 +141,10 @@ for (d in 1:500){
   g2Ys <- g2Ys_pr
   g3Ys <- g3Ys_pr
   g4Ys <- g4Ys_pr
+  print(g2Xs+g4Xs+g2Ys+g4Ys)
+  print(g1Xs+g1Ys+g3Xs+g3Ys)
 }
+
 g1e <- g1e_pr 
 g2e <- g2e_pr 
 g3e <- g3e_pr 
@@ -153,11 +155,10 @@ g2Xs <- g2Xs_pr
 g3Xs <- g3Xs_pr
 g4Xs <- g4Xs_pr
 
-g1Ys <- g1Ys_pr-0.0001
-g2Ys <- g2Ys_pr
-g3Ys <- g3Ys_pr
-g4Ys <- g4Ys_pr+0.0001
-
+g3Ys <- g1Ys_pr*0.001
+g4Ys <- g2Ys_pr*0.001
+g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+g2Ys <- g2Ys_pr-g2Ys_pr*0.001
 
 # SIMULATION 
 
@@ -166,7 +167,7 @@ kD <- 0.25 #proportion males
 s <- 0.5 #selection in males 
 t <- 0.5 #selection in females 
 hA <- 0.5 #dominance of SA locus 
-z <- 0.001 #fitness cost of the driver 
+z <- 0.01 #fitness cost of the driver 
 r <- 0.001 #recombination
 
 u11f <- 1
@@ -261,10 +262,6 @@ for (d in 1:G){
   SexRatioVector[d]<-g1Ys+g2Ys+g3Ys+g4Ys
   DfreqVector[d]<-g3Xs+g4Xs+g3Ys+g4Ys
   AfreqVector[d]<-g2Xs+g4Xs+g2Ys+g4Ys
-
-  DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-  DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
-  DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
   YFreq[d]<-g1Ys+g2Ys+g3Ys+g4Ys
   XFreq[d]<-g1Xs+g2Xs+g3Xs+g4Xs
   
@@ -281,9 +278,9 @@ for (d in 1:G){
   g3YsFreq[d]<-g3Ys
   g4YsFreq[d]<-g4Ys
   
-  DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-  DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
-  DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
+  DA2D2Vector[d]<-((g1Xs+g1Ys)*(g4Ys+g4Xs))-((g2Xs+g2Ys)*(g3Xs+g3Ys))
+  DA2YVector[d]<- (g2Ys+g4Ys)*(g1Xs+g3Xs)-(g1Ys+g3Ys)*(g2Xs+g4Xs)
+  DD2YVector[d]<-((g3Ys+g4Ys)*(g1Xs+g2Xs))-((g3Xs+g4Xs)*(g1Ys+g2Ys))
 }
 
 layout(matrix(c(1, 3, 2, 3, 4, 5), 3, 2, byrow = TRUE))
@@ -319,7 +316,6 @@ d <- tibble(G = x,
             A2D2Y = g4YsFreq)
 write.table(x = d, file = "data_2C.txt", row.names = F, col.names = T)
 getwd()
-
 
 
 SA_function <- function(G, kD, s, t, hA, z, r) {
@@ -467,10 +463,10 @@ SA_function <- function(G, kD, s, t, hA, z, r) {
   g3Xs <- g3Xs_pr
   g4Xs <- g4Xs_pr
   
-  g1Ys <- g1Ys_pr-0.0001
-  g2Ys <- g2Ys_pr
-  g3Ys <- g3Ys_pr
-  g4Ys <- g4Ys_pr+0.0001
+  g3Ys <- g1Ys_pr*0.001
+  g4Ys <- g2Ys_pr*0.001
+  g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+  g2Ys <- g2Ys_pr-g2Ys_pr*0.001
   
   #SIMULATION 
   
@@ -537,7 +533,6 @@ SA_function <- function(G, kD, s, t, hA, z, r) {
   DfreqVector[d]<-g3Xs+g4Xs+g3Ys+g4Ys
   AfreqVector[d]<-g2Xs+g4Xs+g2Ys+g4Ys
   
-  
   # for loop
   for (d in 1:G){
     #Egg haplotypes (4 total)
@@ -581,11 +576,9 @@ SA_function <- function(G, kD, s, t, hA, z, r) {
     DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
     DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
   }
-  # return((g1e+g3e)-(g1Xs+g3Ys+g1Xs+g3Ys)) #discrepancy in A1 betwen eggs and sperm
   return(list(DfreqVector[d],SexRatioVector[d]))
 }
 
-#A_function <- function(G, k, s, t, h, f, z, r) {
 svector<-c(50)
 kDvector<-c(50)
 SRvector<-c(50)

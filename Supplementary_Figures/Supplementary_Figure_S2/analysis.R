@@ -5,6 +5,13 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
 ML_function <- function(G, kD, kA, s, hA, z, r) {
+  
+  original_kD <- kD 
+  original_z <- z
+  
+  z<-0
+  kD<-0
+  
   #G is the number of generations
   #kD is the skew in favor of Y chromosome (trans driver)
   #kA is the skew in favor of A2, in males (cis driver)
@@ -12,9 +19,7 @@ ML_function <- function(G, kD, kA, s, hA, z, r) {
   #s is the fitness cost of cis driver
   #z is the fitness cost of the trans driver
   #r is the recombination rate 
-  
-  #original_kD <- kD 
-  #original_z <- z
+
   
   DfreqVector<-numeric(G)
   AfreqVector<-numeric(G)
@@ -149,10 +154,13 @@ ML_function <- function(G, kD, kA, s, hA, z, r) {
   g3Xs <- g3Xs_pr
   g4Xs <- g4Xs_pr
   
-  g1Ys <- g1Ys_pr-0.0001
-  g2Ys <- g2Ys_pr
-  g3Ys <- g3Ys_pr
-  g4Ys <- g4Ys_pr+0.0001
+  g3Ys <- g1Ys_pr*0.001
+  g4Ys <- g2Ys_pr*0.001
+  g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+  g2Ys <- g2Ys_pr-g2Ys_pr*0.001
+  
+  kD <- original_kD 
+  z <- original_z
   
   #fitness parameters 
   #u is the trans drive locus (1 is neutral, 2 drives)
@@ -343,10 +351,10 @@ p <- d3 %>% ggplot(aes(kD, kA, z = SexRatio)) +
        fill = "Sex ratio")
 p
 
-pdf(file = "2024_12_30_Figure_S2.pdf", width = 7, height = 6)
+pdf(file = "2025_04_21_Figure_S2.pdf", width = 7, height = 6)
 p
 dev.off()
 
-png(file = "2024_12_30_Figure_S2.png", width = 7, height = 6, res = 1000, units = "in")
+png(file = "2025_04_21_Figure_S2.png", width = 7, height = 6, res = 1000, units = "in")
 p
 dev.off()

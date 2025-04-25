@@ -5,6 +5,12 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
 SA_function <- function(G, kD, s, t, hA, z, r) {
+  (1000,kD,s,t,0.5,0.1,0.1)
+  original_kD <- kD 
+  original_z <- z
+  
+  z<-0
+  kD<-0
   # G is the number of generations
   # kD is the skew in favor of the Y chromosome
   # s is the selection in males
@@ -141,14 +147,18 @@ SA_function <- function(G, kD, s, t, hA, z, r) {
   g3Xs <- g3Xs_pr
   g4Xs <- g4Xs_pr
   
-  g1Ys <- g1Ys_pr-0.0001
-  g2Ys <- g2Ys_pr
-  g3Ys <- g3Ys_pr
-  g4Ys <- g4Ys_pr+0.0001
+  g3Ys <- g1Ys_pr*0.001
+  g4Ys <- g2Ys_pr*0.001
+  g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+  g2Ys <- g2Ys_pr-g2Ys_pr*0.001
   
   #SIMULATION 
   
   #u is the trans drive locus (1 is neutral, 2 drives)
+  
+  kD <- original_kD 
+  z <- original_z 
+  
   u11f <- 1
   u12f <- 1
   u21f <- 1
@@ -320,10 +330,10 @@ p <- d3 %>% ggplot(aes(kD, s, z = SexRatio)) +
        y = bquote("Selection strength ("*italic('s,t')*")"),
        fill = "Sex ratio")
 
-pdf(file = "2024_12_30_Figure_S1.pdf", width = 7, height = 6)
+pdf(file = "2025_04_21_Figure_S1.pdf", width = 7, height = 6)
 p
 dev.off()
 
-png(file = "2024_12_30_Figure_S1.png", width = 7, height = 6, res = 1000, units = "in")
+png(file = "2025_04_21_Figure_S1.png", width = 7, height = 6, res = 1000, units = "in")
 p
 dev.off()

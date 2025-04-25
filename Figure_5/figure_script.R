@@ -22,11 +22,12 @@ dA2end
 delta <- 0.045
 dtA <- tibble(text = c('X', 'Y', 'O',
                        'italic(A)[2]', 'italic(D)[2]'),
-              x = rep(450, 5), y = c(0.381 + delta, 
-                                                0 + delta, 
-                                                0.619 + delta,
-                                                
-                                                0.61 - delta, 0.347 - delta),
+              x = c(450, 450, 450, 450, 450), 
+              y = c(0.387 + delta, 
+                    0 + delta, 
+                    0.487 + delta,
+                    0.619 + delta,
+                    0.337 - delta),
               Allele = unique(dA2$Allele))
 
 dtA
@@ -45,21 +46,19 @@ pA <- dA2 %>% filter(G <= 500) %>% ggplot(aes(G, Frequency, color = Allele)) + g
   
   theme(panel.background = element_rect(fill = "white"),
         axis.line = element_line(color = "black"))
-# pA
+pA
 
 # Plot B
 
-
-dB2 <- dB %>% gather(DA2D2, DA2Y, DD2Y, value = "LD", key = "Haplotype")
+dB2 <- dB %>% filter(G <= 500) %>% gather(DA2D2, DA2Y, DD2Y, value = "LD", key = "Haplotype")
 
 
 dB2end <- dB2 %>% filter(G == max(G))
-
-delta <- 0.04
+delta <- 0.0175
 dtB <- tibble(text = c(bquote(italic(Assister-Distorter)),
-                       bquote(italic(Assister)*"-XY"),
-                       bquote(italic(Distorter)*"-XY")),
-              x = c(360, 400, 400), y = c(0.368 + delta, 0.133 + delta, 0.132-delta),
+                       bquote(italic(Assister)*"-XY0"),
+                       bquote(italic(Distorter)*"-XY0")),
+              x = c(390,420,420), y = c(0.145, 0.035, 0.06),
               Haplotype = unique(dB2$Haplotype))
 
 dtB
@@ -70,11 +69,12 @@ pB <- dB2 %>% filter(G <= 500) %>% ggplot(aes(G, LD, color = Haplotype)) + geom_
                                  bquote(italic(D)[2]~"Y"))) + 
   geom_hline(yintercept = 0, color = "black", linetype = 2, linewidth = 0.8) + 
   scale_x_continuous(limits = c(0, 500), expand = c(0,0)) + 
-  scale_y_continuous(limits = c(-0.2, 0.6), 
-                     expand = c(0,0)) + 
-  labs(x = "Generations", y = "Linkage disequilibrium") +
+  scale_y_continuous(limits = c(0, 0.15), 
+                     breaks = c(0, 0.05, 0.1, 0.15), 
+                     expand = c(0.01,0.01)) + 
+  labs(x = "Generations", y = "Linkage Disequilibrium") +
   geom_text(data = dtB, aes(x, y, color = Haplotype, label = text), parse = T, inherit.aes = F) +
-  theme(panel.background = element_rect(fill = "white"),
+  theme(panel.background = element_rect(fill = "white", color = "black"),
         axis.line = element_line(color = "black"))
 pB
 
@@ -106,18 +106,17 @@ dC4 <- dC3 %>% mutate(Haplotype = factor(Haplotype, c("A1D1X", "A2D1X", "A1D1Y",
 # max(dC3$tot)
 
 
-text <- c(bquote(italic(A)[1]~italic(D)[1]~"X"), 
-          bquote(italic(A)[2]~italic(D)[1]~"X"),
-          
-          # bquote(italic(A)[1]~italic(D)[1]~"O"),
-          bquote(italic(A)[2]~italic(D)[1]~"O"),
-          bquote(italic(A)[2]~italic(D)[2]~"X"),
-          bquote(italic(A)[2]~italic(D)[2]~"O"),
-          bquote(italic(A)[1]~italic(D)[1]~"Y"),
-          bquote(italic(A)[2]~italic(D)[1]~"Y"))
-yvals <- c(0.85, 0.6, 0.55, 0.32, 0.13, 0.38, 0.12)
-xvals <- c(250, 20, 250, 250, 250, 20, 20)
-angle <- c(0, 1, 0, 0, 0, 1, 1)
+text <- c(bquote(italic(A)[1]~italic(D)[1]~"X"), #good
+          bquote(italic(A)[2]~italic(D)[1]~"X"), #good
+          bquote(italic(A)[1]~italic(D)[1]~"Y"), #good
+          bquote(italic(A)[1]~italic(D)[1]~"O"), #good
+          bquote(italic(A)[2]~italic(D)[1]~"Y"), #good
+          bquote(italic(A)[2]~italic(D)[1]~"O"), #move up
+          bquote(italic(A)[2]~italic(D)[2]~"X"), #move square
+          bquote(italic(A)[2]~italic(D)[2]~"O")) #move square
+yvals <- c(0.92, 0.74, 0.45, 0.57, 0.16, 0.40, 0.28,0.13)
+xvals <- c(300, 300, 35, 300, 35, 300, 300,300)
+angle <- c(0, 0, 0, 0, 0, 0, 0,0)
 
 
 dtC <- tibble(text, yvals, xvals, angle)
@@ -132,13 +131,13 @@ pC <- dC4 %>% filter(G <=500) %>% filter(Hatch == 1) %>% ggplot(aes(G, Frequency
                     pattern_angle = 45, pattern_color = "black", 
                     pattern_density = 0.001,
                     pattern_spacing = 0.03) +
-  geom_rect(aes(xmin = 210, xmax = 290, ymin = 0.115, ymax = 0.145), fill = "white") +
-  geom_rect(aes(xmin = 210, xmax = 290, ymin = 0.305, ymax = 0.335), fill = "white") +
+  geom_rect(aes(xmin = 255, xmax = 335, ymin = 0.115, ymax = 0.145), fill = "white") +
+  geom_rect(aes(xmin = 255, xmax = 335, ymin = 0.26, ymax = 0.29), fill = "white") +
   
   
-  annotate('rect', xmin = 210, xmax = 290, ymin = 0.115, ymax = 0.145, 
+  annotate('rect', xmin = 255, xmax = 335, ymin = 0.115, ymax = 0.145, 
            alpha = 0.8, fill = vircol[12]) +
-  annotate('rect', xmin = 210, xmax = 290, ymin = 0.305, ymax = 0.335, 
+  annotate('rect', xmin = 255, xmax = 335, ymin = 0.26, ymax = 0.29, 
            alpha = 0.8, fill = vircol[8]) +
   
   # geom_rect(aes(xmin = 420, xmax = 500, ymin = 0.113, ymax = 0.115), fill = "white") +
@@ -162,7 +161,7 @@ pC <- dC4 %>% filter(G <=500) %>% filter(Hatch == 1) %>% ggplot(aes(G, Frequency
   labs(x = "Generations", y = "Frequency") +
   theme(panel.background = element_rect(fill = "white", color = "black"),
         axis.line = element_line(color = "black"))
-# pC
+pC
 
 
 
@@ -226,10 +225,10 @@ bottom <- plot_grid(pD+ theme(legend.position = "none"), legend_D,
 plot <-  plot_grid(top, bottom, ncol = 1, nrow = 2, rel_heights = c(0.6, 0.4))
 plot
 
-pdf(file = "2024_12_30_Figure_5.pdf", width = 10, height = 10)
+pdf(file = "2025_04_24_Figure_5.pdf", width = 10, height = 10)
 plot
 dev.off()
 
-png(file = "2024_12_30_Figure_5.png", width = 10, height = 10, units = "in", res = 1000)
+png(file = "2025_04_24_Figure_5.png", width = 10, height = 10, units = "in", res = 1000)
 plot
 dev.off()

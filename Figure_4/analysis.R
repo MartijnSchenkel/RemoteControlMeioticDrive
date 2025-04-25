@@ -6,13 +6,13 @@
 #4= D2A2 (neutral, female beneficial)
 
 # parameters 
-G <- 1000 #this is the number of generations
-kD <- 0.25 #male skew
-s <- 0.0 #selection in males
-t <- 0.0 #selection in females
+G <- 500 #this is the number of generations
+kD <- 0.0 #male skew
+s <- 0.5 #selection in males
+t <- 0.5 #selection in females
 hA <- 0.5 #dominance of SA locus
 z <- 0.00 #fitness cost of the driver
-r <- 0.001 #recombination
+r <- 0.00 #recombination
 w <- 0.00
 
 # fitness of the remote-control driving locus (to capture fertility effects of drive): driving allele  <-  D1
@@ -167,19 +167,19 @@ g3e <- g3e
 g4e <- g4e
 
 g1Xs <- g1Xs
-g1Ys <- g1Ys-0.0001
 g2Xs <- g2Xs
-g2Ys <- g2Ys
-
 g3Xs <- g3Xs
-g3Ys <- g3Ys
 g4Xs <- g4Xs
-g4Ys <- g4Ys+0.0001
 
 g1Os <- g1Os
 g2Os <- g2Os
 g3Os <- g3Os
 g4Os <- g4Os
+
+g3Ys <- g1Ys_pr*0.001
+g4Ys <- g2Ys_pr*0.001
+g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+g2Ys <- g2Ys_pr-g2Ys_pr*0.001
 
 DA2D2Vector<-numeric(G)
 DA2YVector<-numeric(G)
@@ -190,7 +190,7 @@ kD <- 0.25 #male skew
 s <- 0.5 #selection in males
 t <- 0.5 #selection in females
 hA <- 0.5 #dominance of assister locus
-z <- 0.001 #fitness cost of the driver
+z <- 0.01 #fitness cost of the driver
 r <- 0.001 #recombination
 w <- 0.001 #fitness cost of 0 chromosome 
 
@@ -384,11 +384,12 @@ for (d in 1:G){
   g3OsFreq[d]<-g3Os
   g4OsFreq[d]<-g4Os
   
-  DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-  DA2YVector[d]<-(g2Os+g4Os+g1Xs+g3Xs)-(g1Os+g2Xs+g3Os+g4Xs)
-  DD2YVector[d]<-(g3Os+g4Os+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Os+g2Os)
+  DA2D2Vector[d]<-((g1Xs+g1Ys+g1Os)*(g4Ys+g4Os+g4Xs))-((g2Xs+g2Ys+g2Os)*(g3Xs+g3Ys+g3Os))
+  DA2YVector[d]<- (g2Ys+g4Ys+g2Os+g4Os)*(g1Xs+g3Xs)-(g1Ys+g3Ys+g1Os+g3Os)*(g2Xs+g4Xs)
+  DD2YVector[d]<-((g3Ys+g4Ys+g3Os+g4Os)*(g1Xs+g2Xs))-((g3Xs+g4Xs)*(g1Ys+g2Ys+g1Os+g2Os))
+  
+  
 }
-
 
 x <- 1:G
 y1 <- XFreq
@@ -597,14 +598,15 @@ SAfunction<-function(G,kD,s,t,hA,z,r,w){
   g4e <- g4e
   
   g1Xs <- g1Xs
-  g1Ys <- g1Ys-0.0001
   g2Xs <- g2Xs
-  g2Ys <- g2Ys
-  
   g3Xs <- g3Xs
-  g3Ys <- g3Ys
   g4Xs <- g4Xs
-  g4Ys <- g4Ys+0.0001
+
+  
+  g3Ys <- g1Ys_pr*0.001
+  g4Ys <- g2Ys_pr*0.001
+  g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+  g2Ys <- g2Ys_pr-g2Ys_pr*0.001
   
   g1Os <- 0.0
   g2Os <- 0.0
@@ -735,10 +737,7 @@ SAfunction<-function(G,kD,s,t,hA,z,r,w){
     YFreq[d]<-g1Ys+g2Ys+g3Ys+g4Ys
     XFreq[d]<-g1Xs+g2Xs+g3Xs+g4Xs
   }
-  #return(OFreq[d]/(OFreq[d]+YFreq[d]))
   return(list(DfreqVector[d], SexRatioVector[d]))
-  #return(SexRatioVector[d])
-  #return(g1e+g2e+g3e+g1Xs+g2Xs+g3Xs+g4Xs+g1Ys+g2Ys+g3Ys+g4Ys+g1Os+g2Os+g3Os+g4Os)
 }
 
 kDvector<-c(100)

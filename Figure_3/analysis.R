@@ -7,11 +7,11 @@
 # parameters 
 G <- 500 # this is the number of generations
 z <- 0.00  # Fitness cost of the trans driver
-l <- 0.00  # Fitness cost of cis driver
+l <- 0.5  # Fitness cost of cis driver
 hA <- 0.0   # Dominance of cis driver
 kD <- 0  # Skew in favor of Y chromosome (trans drive) in males
-kA <- 0   # Skew in favor of A2 (cis drive) in males
-r <- 0.001 # Recombination rate
+kA <- 0.25   # Skew in favor of A2 (cis drive) in males
+r <- 0.00 # Recombination rate
 
 ###BURN IN 
 
@@ -31,10 +31,10 @@ v12f <- 1-hA*l
 v21f <- 1-hA*l
 v22f <- 1-l
 
-v11m <- 1-l
+v11m <- 1
 v12m <- 1-hA*l
 v21m <- 1-hA*l
-v22m <- 1
+v22m <- 1-l
 
 w11m <- u11m*v11m
 w12m <- u11m*v12m
@@ -149,10 +149,10 @@ g2Xs <- g2Xs_pr
 g3Xs <- g3Xs_pr
 g4Xs <- g4Xs_pr
 
-g1Ys <- g1Ys_pr-0.0001
-g2Ys <- g2Ys_pr
-g3Ys <- g3Ys_pr
-g4Ys <- g4Ys_pr+0.0001
+g3Ys <- g1Ys_pr*0.001
+g4Ys <- g2Ys_pr*0.001
+g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+g2Ys <- g2Ys_pr-g2Ys_pr*0.001
 
 G <- 1000 #this is the number of generations
 z <- 0.01 #fitness cost of the trans driver
@@ -280,13 +280,11 @@ for (d in 1:G){
   g2YsFreq[d]<-g2Ys
   g3YsFreq[d]<-g3Ys
   g4YsFreq[d]<-g4Ys
-  DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-  DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
-  DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
+  DA2D2Vector[d]<-((g1Xs+g1Ys)*(g4Ys+g4Xs))-((g2Xs+g2Ys)*(g3Xs+g3Ys))
+  DA2YVector[d]<- (g2Ys+g4Ys)*(g1Xs+g3Xs)-(g1Ys+g3Ys)*(g2Xs+g4Xs)
+  DD2YVector[d]<-((g3Ys+g4Ys)*(g1Xs+g2Xs))-((g3Xs+g4Xs)*(g1Ys+g2Ys))
 }
 
-
-# Create sample data
 x <- 1:G
 y1 <- XFreq
 y2 <- YFreq
@@ -347,7 +345,6 @@ ML_function <- function(G, kD, kA, s, hA, z, r) {
   DA2D2Vector<-numeric(G)
   DA2YVector<-numeric(G)
   DD2YVector<-numeric(G)
-  
   
   #fitness parameters 
   #u is the trans drive locus (1 is neutral, 2 drives)
@@ -419,7 +416,7 @@ ML_function <- function(G, kD, kA, s, hA, z, r) {
   g3Xs <- 0.0
   g3Ys <- 0.0
   g4Xs <- 0.0
-  g4Ys <- 0.00
+  g4Ys <- 0.0
   
   SexRatioVector[1]<-g1Ys+g2Ys+g3Ys+g4Ys
   DfreqVector[1]<-g3Xs+g4Xs+g3Ys+g4Ys
@@ -462,6 +459,61 @@ ML_function <- function(G, kD, kA, s, hA, z, r) {
   z <- original_z
   kD <- original_kD
   
+  #u is the trans drive locus (1 is neutral, 2 drives)
+  u11f <- 1
+  u12f <- 1
+  u21f <- 1
+  u22f <- 1
+  
+  u11m <- 1
+  u12m <- 1-z
+  u21m <- 1-z
+  u22m <- 1-z
+  
+  #v is the cis drive locus (1 is neutral, 2 drives)
+  v11f <- 1 
+  v12f <- 1-hA*s
+  v21f <- 1-hA*s
+  v22f <- 1-s
+  
+  v11m <- 1
+  v12m <- 1-hA*s
+  v21m <- 1-hA*s
+  v22m <- 1-s
+  
+  w11m <- u11m*v11m
+  w12m <- u11m*v12m
+  w13m <- u12m*v11m
+  w14m <- u12m*v12m
+  w21m <- u11m*v21m
+  w22m <- u11m*v22m
+  w23m <- u12m*v21m
+  w24m <- u12m*v22m
+  w31m <- u21m*v11m
+  w32m <- u21m*v12m
+  w33m <- u22m*v11m
+  w34m <- u22m*v12m
+  w41m <- u21m*v21m
+  w42m <- u21m*v22m
+  w43m <- u22m*v21m
+  w44m <- u22m*v22m
+  
+  w11f <- u11f*v11f
+  w12f <- u11f*v12f
+  w13f <- u12f*v11f
+  w14f <- u12f*v12f
+  w21f <- u11f*v21f
+  w22f <- u11f*v22f
+  w23f <- u12f*v21f
+  w24f <- u12f*v22f
+  w31f <- u21f*v11f
+  w32f <- u21f*v12f
+  w33f <- u22f*v11f
+  w34f <- u22f*v12f
+  w41f <- u21f*v21f
+  w42f <- u21f*v22f
+  w43f <- u22f*v21f
+  w44f <- u22f*v22f
   
   # SIMULATION 
   g1e <- g1e_pr 
@@ -474,11 +526,10 @@ ML_function <- function(G, kD, kA, s, hA, z, r) {
   g3Xs <- g3Xs_pr
   g4Xs <- g4Xs_pr
   
-  g1Ys <- g1Ys_pr-0.0001
-  g2Ys <- g2Ys_pr
-  g3Ys <- g3Ys_pr
-  g4Ys <- g4Ys_pr+0.0001
-  
+  g3Ys <- g1Ys_pr*0.001
+  g4Ys <- g2Ys_pr*0.001
+  g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+  g2Ys <- g2Ys_pr-g2Ys_pr*0.001
   
   for (d in 1:G){
     

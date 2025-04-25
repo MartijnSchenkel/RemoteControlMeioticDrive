@@ -1,3 +1,4 @@
+rm(list=ls())
 library(tidyverse)
 library(viridis)
 library(ggpattern)
@@ -22,8 +23,8 @@ dA2end
 delta <- 0.055
 dtA <- tibble(text = c('X', 'Y',
                        'italic(A)[2]', 'italic(D)[2]'),
-              x = c(450, 450, 350, 450), y = c(0.329 - delta, 0.671 + delta, 
-                                               0.476 - delta, 0.476 - delta),
+              x = c(450, 450, 450, 450), y = c(0.27, 0.671 + delta, 
+                                               0.476 + delta, 0.426 - delta),
               Allele = unique(dA2$Allele))
 
 dtA
@@ -69,7 +70,7 @@ delta <- 0.06
 dtB <- tibble(text = c(bquote(italic(Assister-Distorter)),
                        bquote(italic(Assister)*"-XY"),
                        bquote(italic(Distorter)*"-XY")),
-              x = c(390,420,420), y = c(0.979- delta, 0.342 + delta, 0.337 - delta),
+              x = c(390,420,420), y = c(0.23,0.10,0.075),
               Haplotype = unique(dB2$Haplotype))
 
 dtB
@@ -80,9 +81,9 @@ pB <- dB2 %>% filter(G <= 500) %>% ggplot(aes(G, LD, color = Haplotype)) + geom_
                                  bquote(italic(D)[2]~"Y"))) + 
   geom_hline(yintercept = 0, color = "black", linetype = 2, linewidth = 0.8) + 
   scale_x_continuous(limits = c(0, 500), expand = c(0,0)) + 
-  scale_y_continuous(limits = c(-0.2, 1), 
-                     breaks = seq(-0.2, 1, 0.2), 
-                     expand = c(0,0)) + 
+  scale_y_continuous(limits = c(0, 0.25), 
+                     breaks = c(0, 0.05, 0.1, 0.15, 0.2,0.25), 
+                     expand = c(0.01,0.01)) +
   labs(x = "Generations", y = "Linkage Disequilibrium") +
   geom_text(data = dtB, aes(x, y, color = Haplotype, label = text), parse = T, inherit.aes = F) +
   theme(panel.background = element_rect(fill = "white", color = "black"),
@@ -116,16 +117,14 @@ max(dC3$tot)
 
 
 text <- c(bquote(italic(A)[1]~italic(D)[1]~"X"), 
-          bquote(italic(A)[1]~italic(D)[1]~"Y"),
-          # bquote(italic(A)[1]~italic(D)[2]~"X"),
-          # bquote(italic(A)[1]~italic(D)[2]~"Y"),
           bquote(italic(A)[2]~italic(D)[1]~"X"),
+          bquote(italic(A)[1]~italic(D)[1]~"Y"),
           bquote(italic(A)[2]~italic(D)[1]~"Y"),
           bquote(italic(A)[2]~italic(D)[2]~"X"),
           bquote(italic(A)[2]~italic(D)[2]~"Y"))
-yvals <- c(0.85, 0.6, 0.6, 0.20, 0.435, 0.215)
-xvals <- c(250, 25, 250, 25, 250, 250)
-angle <- c(0, 1, 0, 1, 0, 0)
+yvals <- c(0.85, 0.6, 0.54, 0.07, 0.40, 0.215)
+xvals <- c(250, 250, 40, 20, 250, 250)
+angle <- c(0, 0, 0, 1, 0, 0)
 dtC <- tibble(text, yvals, xvals)
 
 vircol <- viridis_pal()(8)
@@ -139,11 +138,11 @@ pC <- dC4 %>% filter(Hatch == 1,G <= 500) %>% ggplot(aes(G, Frequency, fill = Ha
                     pattern_density = 0.001,
                     pattern_spacing = 0.03) +
   geom_rect(aes(xmin = 210, xmax = 290, ymin = 0.2, ymax = 0.23), fill = "white") +
-  geom_rect(aes(xmin = 210, xmax = 290, ymin = 0.42, ymax = 0.45), fill = "white") +
+  geom_rect(aes(xmin = 210, xmax = 290, ymin = 0.39, ymax = 0.42), fill = "white") +
   
   annotate('rect', xmin = 210, xmax = 290, ymin = 0.2, ymax = 0.23, 
            alpha = 0.8, fill = vircol[8]) +
-  annotate('rect', xmin = 210, xmax = 290, ymin = 0.42, ymax = 0.45, 
+  annotate('rect', xmin = 210, xmax = 290, ymin = 0.39, ymax = 0.42, 
            alpha = 0.8, fill = vircol[6]) +
   
   # geom_rect(aes(xmin = 420, xmax = 500, ymin = 0.113, ymax = 0.115), fill = "white") +
@@ -173,7 +172,7 @@ pC <- dC4 %>% filter(Hatch == 1,G <= 500) %>% ggplot(aes(G, Frequency, fill = Ha
   labs(x = "Generations", y = "Frequency") +
   theme(panel.background = element_rect(fill = "white", color = "black"),
         axis.line = element_line(color = "black"))
-# pC
+ pC
 
 # Plot D
 pD <- dD %>% ggplot(aes(k, c, z = DF)) + geom_contour_filled(color = "black", bins=10) + 
@@ -238,10 +237,10 @@ plot <-  plot_grid(top, bottom, ncol = 1, nrow = 2, rel_heights = c(0.6, 0.4))
 # plot
 # dev.off()
 
-pdf(file = "2025_01_07_Figure_S4.pdf", width = 10, height = 10)
+pdf(file = "2025_04_24_Figure_S4.pdf", width = 10, height = 10)
 plot
 dev.off()
 
-png(file = "2025_01_07_Figure_S4.png", width = 10, height = 10, units = "in", res = 1000)
+png(file = "2025_04_24_Figure_S4.png", width = 10, height = 10, units = "in", res = 1000)
 plot
 dev.off()

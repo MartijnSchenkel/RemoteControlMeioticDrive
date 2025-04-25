@@ -7,9 +7,9 @@
 #parameters
 G <- 500 #this is the number of generations 
 kD <- 0.0 #proportion males
-a <- 0.0 #maternal wrong 
-b <- 0.0 #paternal wrong  
-t <- 0.0 #cost 
+a <- 0.5 #maternal wrong 
+b <- 0.5 #paternal wrong  
+t <- 0.3 #cost 
 z <- 0.0 #fitness cost of the driver 
 r <- 0.00 #recombination
 
@@ -155,10 +155,11 @@ g2Xs <- g2Xs_pr
 g3Xs <- g3Xs_pr
 g4Xs <- g4Xs_pr
 
-g1Ys <- g1Ys_pr
-g2Ys <- g2Ys_pr-0.0001
-g3Ys <- g3Ys_pr
-g4Ys <- g4Ys_pr+0.0001
+
+g3Ys <- g1Ys_pr*0.001
+g4Ys <- g2Ys_pr*0.001
+g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+g2Ys <- g2Ys_pr-g2Ys_pr*0.001
 
 ###SIMULATION 
 
@@ -272,9 +273,9 @@ for (d in 1:G){
   Dsmax<-min((ps*(1-qs)),((1-ps)*qs))
   DzVector[d]<-0.5*(g4e*(g1Xs+g1Ys)+g1e*(g4Xs+g4Ys) - g2e*(g3Xs+g3Ys)-g3e*(g2Xs+g2Ys))
   
-  DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-  DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
-  DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
+  DA2D2Vector[d]<-((g1Xs+g1Ys)*(g4Ys+g4Xs))-((g2Xs+g2Ys)*(g3Xs+g3Ys))
+  DA2YVector[d]<- (g2Ys+g4Ys)*(g1Xs+g3Xs)-(g1Ys+g3Ys)*(g2Xs+g4Xs)
+  DD2YVector[d]<-((g3Ys+g4Ys)*(g1Xs+g2Xs))-((g3Xs+g4Xs)*(g1Ys+g2Ys))
   YFreq[d]<-g1Ys+g2Ys+g3Ys+g4Ys
   XFreq[d]<-g1Xs+g2Xs+g3Xs+g4Xs
   
@@ -291,9 +292,9 @@ for (d in 1:G){
   g3YsFreq[d]<-g3Ys
   g4YsFreq[d]<-g4Ys
   
-  DA2D2Vector[d]<-(g1Xs+g4Xs+g1Ys+g4Ys)-(g2Xs+g3Xs+g2Ys+g3Ys)
-  DA2YVector[d]<-(g2Ys+g4Ys+g1Xs+g3Xs)-(g1Ys+g2Xs+g3Ys+g4Xs)
-  DD2YVector[d]<-(g3Ys+g4Ys+g1Xs+g2Xs)-(g3Xs+g4Xs+g1Ys+g2Ys)
+  DA2D2Vector[d]<-((g1Xs+g1Ys)*(g4Ys+g4Xs))-((g2Xs+g2Ys)*(g3Xs+g3Ys))
+  DA2YVector[d]<- (g2Ys+g4Ys)*(g1Xs+g3Xs)-(g1Ys+g3Ys)*(g2Xs+g4Xs)
+  DD2YVector[d]<-((g3Ys+g4Ys)*(g1Xs+g2Xs))-((g3Xs+g4Xs)*(g1Ys+g2Ys))
 }
 
 
@@ -459,10 +460,10 @@ PAfunction<-function(G,kD,a,b,t,z,r){
   g3Xs <- g3Xs_pr
   g4Xs <- g4Xs_pr
   
-  g1Ys <- g1Ys_pr
-  g2Ys <- g2Ys_pr-0.0001
-  g3Ys <- g3Ys_pr
-  g4Ys <- g4Ys_pr+0.0001
+  g3Ys <- g1Ys_pr*0.001
+  g4Ys <- g2Ys_pr*0.001
+  g1Ys <- g1Ys_pr-g1Ys_pr*0.001
+  g2Ys <- g2Ys_pr-g2Ys_pr*0.001
   
   
   kD <- original_kD

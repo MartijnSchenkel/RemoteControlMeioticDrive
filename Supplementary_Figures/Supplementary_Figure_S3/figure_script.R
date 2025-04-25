@@ -22,7 +22,7 @@ dA2end
 delta <- 0.045
 dtA <- tibble(text = c('X', 'Y',
                        'italic(A)[2]', 'italic(D)[2]'),
-              x = c(1750, 1750, 1750, 1750), y = c(0.408 - delta, 0.592 + delta, 0.175 + delta, 0.19 - 3*delta),
+              x = c(1750, 1750, 1750, 1750), y = c(0.408, 0.592, 0.175, 0.19 - 3*delta),
               Allele = unique(dA2$Allele))
 
 dtA
@@ -56,7 +56,7 @@ delta <- 0.06
 dtB <- tibble(text = c(bquote(italic(Assister-Distorter)),
                        bquote(italic(Assister)*"-XY"),
                        bquote(italic(Distorter)*"-XY")),
-              x = c(1350, 1000, 1650), y = c(0.75 - delta, 0.00452 + delta, 0.00494 + delta),
+              x = c(1575, 1650, 1650), y = c(0.11, 0.015, 0.04),
               Haplotype = unique(dB2$Haplotype))
 
 dtB
@@ -67,8 +67,9 @@ pB <- dB2 %>% ggplot(aes(G, LD, color = Haplotype)) + geom_line(linewidth = 0.8)
                                  bquote(italic(D)[2]~"Y"))) + 
   geom_hline(yintercept = 0, color = "black", linetype = 2, linewidth = 0.8) + 
   scale_x_continuous(limits = c(0, 2000), expand = c(0,0)) + 
-  scale_y_continuous(limits = c(0,1),
-                     expand = c(0,0)) + 
+  scale_y_continuous(limits = c(0, 0.15), 
+                     breaks = c(0, 0.05, 0.1, 0.15), 
+                     expand = c(0.01,0.01)) +
   labs(x = "Generations", y = "Linkage disequlibrium") +
   geom_text(data = dtB, aes(x, y, color = Haplotype, label = text), parse = T, inherit.aes = F) +
   theme(panel.background = element_rect(fill = "white", color = "black"),
@@ -109,7 +110,7 @@ text <- c(bquote(italic(A)[1]~italic(D)[1]~"X"),
           bquote(italic(A)[2]~italic(D)[1]~"Y"),
           bquote(italic(A)[2]~italic(D)[2]~"X"),
           bquote(italic(A)[2]~italic(D)[2]~"Y"))
-yvals <- c(0.85, 0.65, 0.37, 0.12, 0.1, 0.03)
+yvals <- c(0.85, 0.6, 0.37, 0.12, 0.1, 0.03)
 xvals <- c(1000, 300, 1000, 300, 1500, 1500)
 angle <- c(0, 0, 1, 1, 0, 0)
 dtC <- tibble(text, yvals, xvals)
@@ -220,11 +221,11 @@ plot <-  plot_grid(top, bottom, ncol = 1, nrow = 2, rel_heights = c(0.6, 0.4))
 plot
 
 
-pdf(file = "2024_12_30_Figure_S3.pdf", width = 10, height = 10)
+pdf(file = "2025_04_24_Figure_S3.pdf", width = 10, height = 10)
 plot
 dev.off()
 
 
-png(file = "2024_12_30_Figure_S3.png", width = 10, height = 10, units = "in", res = 1000)
+png(file = "2025_04_24_Figure_S3.png", width = 10, height = 10, units = "in", res = 1000)
 plot
 dev.off()
